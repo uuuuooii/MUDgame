@@ -3,8 +3,8 @@ export class MonsterShape {
   hp: number;
   private atk: number;
   monsterName: string;
-  posX: number;
-  posY: number;
+  private posX: number;
+  private posY: number;
   maxHp: number;
 
   constructor(
@@ -33,24 +33,33 @@ export class MonsterShape {
       );
       target.hp -= this.atk;
 
-      console.log(
-        `${target.name}가 공격${this.atk}을 받고, 체력${target.hp}가 남았다.`
-      );
+      //hp가 마이너스로 안 나오게끔
+      if (target.hp < 0) {
+        target.hp = 0;
+        console.log(
+          `${target.name}가 공격${this.atk}을 받고, 체력${target.hp}가 남았다.`
+        );
+      } else {
+        console.log(
+          `${target.name}가 공격${this.atk}을 받고, 체력${target.hp}가 남았다.`
+        );
+      }
       console.log("=========================================");
     }
   }
 
-  //몬스터 위치
+  //[2]몬스터 위치
   getPos() {
     console.log(`몬스터 위치 X:${this.posX}, Y:${this.posY}`);
     return [this.posX, this.posY];
   }
 
-  //몬스터 능력
+  //[2]몬스터 능력
   monsterAbility() {
     console.log(
       `${this.monsterName}의 능력은${this.lv}lv, ${this.hp}hp, ${this.atk}atk 입니다.`
     );
+
     return [this.lv, this.hp, this.atk];
   }
 }

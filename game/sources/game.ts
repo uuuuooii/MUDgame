@@ -22,6 +22,8 @@ export class Game {
     name: string,
     posX: number,
     posY: number
+    //생성자 주입
+    // private heroWShape: HeroWShape
   ) {
     //랜덤 시작
 
@@ -61,12 +63,13 @@ export class Game {
         this.createAttackItem();
         return this.mapInfoMessage();
       } else if (line === "2") {
-        console.log(`없음!`);
+        console.log(`다시 선택해주세요!`);
+        this.characterChoice();
       }
     });
   };
 
-  //[2]몬스터 초기 세팅
+  //[2]몬스터 생성
   createMonster() {
     let monsterIndex: number = 1;
 
@@ -125,7 +128,7 @@ export class Game {
     return faceToFace;
   }
 
-  //회복력 생성
+  //[2] 회복 아이템 생성
   createRecoveryItem() {
     const recoveryPosX: number = Math.floor(Math.random() * 21);
     const recoveryPosY: number = Math.floor(Math.random() * 21);
@@ -136,7 +139,7 @@ export class Game {
     this.recoveryItemPosArr.push([recoveryPosX, recoveryPosY]);
   }
 
-  //공격력 생성
+  //[2] 공격 아이템 생성
   createAttackItem() {
     let attackItemIndex: number = 0;
     const recoveryItem = this.recoveryItemArr[0];
@@ -215,38 +218,13 @@ export class Game {
     return faceToFace;
   }
 
-  //[3] 나의 위치 & 몬스터 만나는지 체크
-  movePosition() {
-    console.log(`이동 위치 x: ${this.posX}, y: ${this.posY}`);
-
-    console.log("=========================================");
-
-    //몬스터 만나면 choiceAction넘어감
-    const meetMonster = this.meetMonsterCheck(this.posX, this.posY);
-    //공격 아이템 찾으면 mapInfoMessage넘어감
-    const attackFindItem = this.findAttackItem(this.posX, this.posY);
-    //회복 아이템
-    const recoveryFindItem = this.findRecoveryItem(this.posX, this.posY);
-    if (meetMonster) {
-      return this.choiceAction(meetMonster.index);
-    }
-    if (attackFindItem) {
-      return this.mapInfoMessage();
-    }
-    if (recoveryFindItem) {
-    }
-    return this.mapInfoMessage();
-  }
-
   //[2]동서남북 이동
   mapInfoMessage() {
     if (this.heroWShape.hp <= 0) {
-      setTimeout(() => {
-        console.log("아이템을 찾아서 체력을 회복하세요");
-        console.log("=========================================");
-        console.log(`어디로 이동하시겠어어요?`);
-        console.log("[1:동 2:서 3:남 4:북] 중에 선택하세요.");
-      }, 1000);
+      console.log("아이템을 찾아서 체력을 회복하세요");
+      console.log("=========================================");
+      console.log(`어디로 이동하시겠어어요?`);
+      console.log("[1:동 2:서 3:남 4:북] 중에 선택하세요.");
     } else if (this.posX === 10 && this.posY === 10) {
       console.log(`현재는 광장에 있습니다.`);
       console.log("=========================================");
@@ -332,6 +310,29 @@ export class Game {
     }
   }
 
+  //[3] 나의 위치 & 몬스터 만나는지 체크 & 아이템 찾았는지 체크
+  movePosition() {
+    console.log(`이동 위치 x: ${this.posX}, y: ${this.posY}`);
+
+    console.log("=========================================");
+
+    //몬스터 만나면 choiceAction넘어감
+    const meetMonster = this.meetMonsterCheck(this.posX, this.posY);
+    //공격 아이템 찾으면 mapInfoMessage넘어감
+    const attackFindItem = this.findAttackItem(this.posX, this.posY);
+    //회복 아이템 찾으면 mapInfoMessage넘어감
+    const recoveryFindItem = this.findRecoveryItem(this.posX, this.posY);
+    if (meetMonster) {
+      return this.choiceAction(meetMonster.index);
+    }
+    if (attackFindItem) {
+      return this.mapInfoMessage();
+    }
+    if (recoveryFindItem) {
+    }
+    return this.mapInfoMessage();
+  }
+
   //[4]싸울지 귀한할지 결정
   choiceAction(index: number) {
     console.log("공격하시겠습니까? 1.공격. 2.귀환.");
@@ -358,7 +359,7 @@ export class Game {
     });
   }
 
-  //[4]싸울지 도망갈지 결정
+  //[4]계속 싸울지 도망갈지 결정
   repeatChoiceAction(index: number) {
     const monster = this.monsterArr[index];
 
@@ -395,6 +396,8 @@ export class Game {
     } else if (this.heroWShape.hp <= 0) {
       console.log("전사가 죽었습니다. 광장으로 이동합니다.");
       this.mapInfoMessage();
+      this.posX = 10;
+      this.posY = 10;
     } else if (monster.hp <= 0) {
       console.log("몬스터가 죽었습니다.");
       this.heroWShape.getUpgrade(this.heroHP, this.heroATK);
@@ -429,7 +432,7 @@ export class Game {
   randomEscape() {
     const randomX: number = Math.floor(Math.random() * 21);
     const randomY: number = Math.floor(Math.random() * 21);
-    console.log(randomX, randomY);
+
     this.posX = randomX;
     this.posY = randomY;
 

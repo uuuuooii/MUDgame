@@ -11,12 +11,18 @@ export class HeroWShape {
   hp: number;
   atk: number;
   name: string;
-  upgrade: number;
   posX: number;
   posY: number;
   maxHp: number;
 
-  constructor(lv, hp, atk, name, posX, posY) {
+  constructor(
+    lv: number,
+    hp: number,
+    atk: number,
+    name: string,
+    posX: number,
+    posY: number
+  ) {
     this.lv = lv;
     this.hp = hp; //체력
     this.atk = atk; //공격력
@@ -26,7 +32,7 @@ export class HeroWShape {
     this.maxHp = this.hp;
   }
 
-  //레벨업
+  //[4]레벨업
   getUpgrade(hp: number, atk: number) {
     this.lv += 1;
     this.hp = hp * 2;
@@ -46,9 +52,17 @@ export class HeroWShape {
       );
       target.hp -= this.atk;
 
-      console.log(
-        `${target.monsterName}가 공격${this.atk}을 받고, 체력${target.hp}가 남았다.`
-      );
+      //hp가 마이너스로 안 나오게끔
+      if (target.hp < 0) {
+        target.hp = 0;
+        console.log(
+          `${target.monsterName}가 공격${this.atk}을 받고, 체력${target.hp}가 남았다.`
+        );
+      } else {
+        console.log(
+          `${target.monsterName}가 공격${this.atk}을 받고, 체력${target.hp}가 남았다.`
+        );
+      }
     }
   }
 }
